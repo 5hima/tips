@@ -1,0 +1,24 @@
+アクセス頻度の多いテーブル
+select
+relname,
+coalesce(seq_tup_read,0)+coalesce(idx_tup_fetch,0)+
+coalesce(n_tup_ins,0)+coalesce(n_tup_upd,0)+coalesce(n_tup_del,0) as total,
+coalesce(seq_tup_read,0)+coalesce(idx_tup_fetch,0) as select,
+coalesce(n_tup_ins,0) as insert,
+coalesce(n_tup_upd,0) as update,
+coalesce(n_tup_del,0) as delete
+from pg_stat_user_tables
+order by total desc;
+
+
+I/O回数＆キャッシュヒット率
+select
+*,
+(heap_blks_hit*100) / (heap_blks_read+heap_blks_hit) as ritu
+from pg_statio_all_tables
+where heap_blks_hit >= 1
+and schemaname = 'public' order by ritu;
+
+
+インデックス利用回数
+select * from pg_stat_user_indexes;
