@@ -21,9 +21,9 @@ find $1 -type f -regex "[^\;\%\$\&\` ]*" -ls | awk '
 	  	FILENAMES = ""
 
   	}
-	
+
 		FILENAMES = FILENAMES$11"\\\\0"
-	
+
     }
 	END{
 
