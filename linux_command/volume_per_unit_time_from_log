@@ -1,0 +1,1 @@
+zcat access.log.gz | grep '2018:09' | awk '{print substr($4, 1, 17),$10}'| sort | awk 'BEGIN{date = "date";volume = "volume"}{if($1 == date){if($2 != "-"){volume += $2}}else{print date,volume;date = $1;if($2 != "-"){volume = $2;}else{volume = 0}}}END{print date,volume}'
