@@ -1,3 +1,3 @@
-時間単位でカウント
+# 時間単位でカウント
 select count(receivetime) from mail_datas where receivetime >= '2018-04-12 10:00:00' and receivetime < '2018-04-12 11:00:00';
 select date_trunc('hour', receivetime),count(*) from mail_datas where receivedate = '20180412' group by date_trunc('hour', receivetime) order by date_trunc('hour', receivetime);
