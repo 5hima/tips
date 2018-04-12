@@ -1,0 +1,2 @@
+# nullを含むカラムから特定の文字列を除外したい場合
+select * from {table} where date = '20180406' and ({column} is null or {column} <> '9999');
