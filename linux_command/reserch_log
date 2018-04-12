@@ -1,0 +1,1 @@
+ls /var/www/html/logs/error_log* | grep -E 'error_log(-201804(0[7-9]|1[0-9])(\.gz)?)?$' | while read line; do echo $line; if [[ $line =~ \.gz$ ]]; then zcat $line | grep 'busy' | awk '{ print substr($1,2),$2,$3,$4 }'; else grep 'busy' $line | awk '{ print substr($1,2),$2,$3,$4 }'; fi; done
