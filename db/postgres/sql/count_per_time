@@ -1,0 +1,3 @@
+# 時間単位でカウント
+select count(column) from table where column >= '2018-04-12 10:00:00' and column < '2018-04-12 11:00:00';
+select date_trunc('hour', column),count(*) from table where column = '20180412' group by date_trunc('hour', column) order by date_trunc('hour', column);
