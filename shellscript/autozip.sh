@@ -30,8 +30,8 @@ find $1 -type f -regex "[^\;\%\$\&\` ]*" -ls | awk '
 	  print FILENAMES
 
 	 }' | while read LINE; do
-
-		echo -en $LINE | sed 's/\\ / /g'| xargs -0 -s 131072 find | zip `date +%Y%m%d%H%M%S` -@
+		COUNT=$(( COUNT + 1 ))
+		echo -en $LINE | sed 's/\\ / /g'| xargs -0 -s 131072 find | zip $COUNT -@
 		sleep 1
 
 	done
