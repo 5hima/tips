@@ -2,36 +2,42 @@
 
 #引数に容量分割zipしたいディレクトを指定
 
-find $1 -type f -regex "[^\;\%\$\&\` ]*" -ls | awk '
-	BEGIN{
+find $1 -type f -print -ls | awk '
+  BEGIN{
 
-	  COUNT = 0
-	  FILENAMES = ""
-	  total_file_size = 0
+    COUNT = 0
+    FILENAMES = ""
+    total_file_size = 0
 
-	}
-    (NF == 11 && $11 !~ /\;\%\$\&\`/){
-		COUNT++
-		total_file_size += $7
-  
-	  if(total_file_size >= 1000000000){
+  }
+  (NF >= 9){
+    COUNT++
+    total_file_size += $7
 
-		print FILENAMES
-	  	total_file_size = $7
-	  	FILENAMES = ""
+    if(total_file_size >= 2000000000){
 
-  	}
-
-		FILENAMES = FILENAMES$11"\\\\0"
+    print FILENAMES
+      total_file_size = $7
+      FILENAMES = ""
 
     }
-	END{
 
-	  print FILENAMES
+    FILENAMES = FILENAMES$11
 
-	 }' | while read LINE; do
-		COUNT=$(( COUNT + 1 ))
-		echo -en $LINE | sed 's/\\ / /g'| xargs -0 -s 131072 find | zip $COUNT -@
-		sleep 1
+    for(i = 12; i <= NF; i++){
 
-	done
+      FILENAMES = FILENAMES"\\ "$i
+
+    }
+
+    FILENAMES = FILENAMES"\\\\0"
+
+  }
+  END{
+
+    print FILENAMES
+
+   }' | while read LINE; do
+    COUNT=$(( COUNT + 1 ))
+    echo -en $LINE | sed 's/\\ / /g'| xargs -0 -s 131072 find | zip $COUNT -@
+  done
