@@ -1,0 +1,51 @@
+Function image_paste()
+Dim w_address As String
+Dim hako As Variant
+Dim i As Long
+Dim start_row
+Dim start_column
+w_address = Selection.Address
+start_row = Selection(1).Row
+start_column = Selection(1).Column
+hako = Selection
+i = 1
+If Selection.Count = 1 Then
+If hako <> "" Then
+If IsError(hako) = False And IsNumeric(hako) = False Then
+If Dir(hako) <> "" Then
+ActiveSheet.Pictures.Insert(hako).Select
+Selection.Left = Range(Cells(start_row + i - 1, start_column + 1), Cells(start_row + i - 1, start_column + 1)).Left + 1
+Selection.Top = Range(Cells(start_row + i - 1, start_column + 1), Cells(start_row + i - 1, start_column + 1)).Top + 1
+Selection.Height = Range(Cells(start_row + i - 1, start_column + 1), Cells(start_row + i - 1, start_column + 1)).Height - 2
+End If
+End If
+End If
+Else
+For i = 1 To UBound(hako)
+
+    Cells(i + start_row - 1, start_column + 1).Select
+    With ActiveSheet.Shapes.AddPicture( _
+            Filename:=hako(i, 1), _
+            LinkToFile:=False, _
+            SaveWithDocument:=True, _
+            Left:=Selection.Left, _
+            Top:=Selection.Top, _
+            Width:=0, _
+            Height:=0)
+        '一旦、元のサイズに戻す
+        .ScaleHeight 1, msoTrue
+        .ScaleWidth 1, msoTrue
+        'サイズ調整、セル内に収める
+        If Cells(i + start_row - 1, start_column + 1).Width / .Width < Cells(i + start_row - 1, start_column + 1).Height / .Height Then
+            dblScal = WorksheetFunction.RoundDown(Cells(i + start_row - 1, start_column + 1).Width / .Width, 2)
+        Else
+            dblScal = WorksheetFunction.RoundDown(Cells(i + start_row - 1, start_column + 1).Height / .Height, 2)
+        End If
+        .Width = .Width * dblScal
+        .Height = .Height * dblScal
+    End With
+
+Next i
+End If
+Range(w_address).Select
+End Function
